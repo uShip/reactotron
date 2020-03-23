@@ -47,6 +47,7 @@ class Session {
   // Selected Connection
   @observable selectedConnection = null
   @observable customCommands = []
+  @observable vitals = []
 
   port = 9090
 
@@ -222,6 +223,12 @@ class Session {
     } else if (command.type.substr(0, 5) === "repl.") {
       this.ui.replResponse(command)
       return
+    } else if (command.type == "vitals") {
+      // const vitalsData = {
+      //   timestamp : new Date(),
+      //   ...command.payload.value
+      // }
+      this.vitals.push(command.payload.value)
     }
 
     this.commandsManager.addCommand(command)

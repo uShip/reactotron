@@ -8,6 +8,7 @@ import StateKeysResponseCommand from './StateKeysResponseCommand'
 import StateValuesChangeCommand from './StateValuesChangeCommand'
 import DisplayCommand from './DisplayCommand'
 import ImageCommand from './ImageCommand'
+import VitalsCommand from './VitalsCommand'
 import SagaTaskCompleteCommand from './SagaTaskCompleteCommand'
 import AsyncStorageValuesCommand from './AsyncStorageValuesCommand'
 import AsyncStorageMutationCommand from './AsyncStorageMutationCommand'
@@ -42,6 +43,9 @@ export default command => {
       return AsyncStorageValuesCommand
     case 'asyncStorage.mutation':
       return AsyncStorageMutationCommand
+    case 'vitals':
+      console.log("===> vitals <===")
+      return VitalsCommand
     default: {
       return null
     }

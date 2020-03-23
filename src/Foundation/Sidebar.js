@@ -4,7 +4,7 @@ import Colors from "../Theme/Colors"
 import SidebarButton from "./SidebarButton"
 import { inject, observer } from "mobx-react"
 import { MdReorder, MdAssignment, MdPhoneIphone, MdLiveHelp } from "react-icons/md"
-import { FaMagic } from "react-icons/fa"
+import { FaMagic, FaChartBar } from "react-icons/fa"
 
 const logoUrl = require("../Theme/Reactotron-128.png")
 
@@ -46,6 +46,9 @@ class Sidebar extends Component {
     }
     this.handleClickCustomCommands = () => {
       this.props.session.ui.switchTab("customCommands")
+    }
+    this.handleClickVitals = () => {
+      this.props.session.ui.switchTab("vitals")
     }
   }
 
@@ -98,6 +101,13 @@ class Sidebar extends Component {
               iconSize={25}
               isActive={ui.tab === "customCommands"}
               onClick={this.handleClickCustomCommands}
+            />
+            <SidebarButton
+              text="React Native Vitals"
+              icon={FaChartBar}
+              iconSize={25}
+              isActive={ui.tab === "vitals"}
+              onClick={this.handleClickVitals}
             />
           </div>
           <div style={Styles.spacer} />

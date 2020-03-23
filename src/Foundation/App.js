@@ -20,6 +20,7 @@ import Timeline from "../Timeline/Timeline"
 import Sidebar from "./Sidebar"
 import StatusBar from "./StatusBar"
 import CustomCommandsList from "../CustomCommands/CustomCommandsList"
+import NativeVitals from "../NativeVitals/NativeVitals"
 import ReactotronTerminal from "./ReactotronTerminal"
 
 const session = new SessionStore(config.get("server.port", 9090))
@@ -58,6 +59,7 @@ export default class App extends Component {
     const showNative = ui.tab === "native"
     const showState = ui.tab === "state"
     const showCustomCommands = ui.tab === "customCommands"
+    const showVitals = ui.tab === "vitals"
 
     return (
       <Provider session={session}>
@@ -84,6 +86,9 @@ export default class App extends Component {
                   </div>
                   <div style={showCustomCommands ? Styles.page : Styles.pageHidden}>
                     <CustomCommandsList />
+                  </div>
+                  <div style={showVitals ? Styles.page : Styles.pageHidden}>
+                    <NativeVitals />
                   </div>
                   <div style={showSettings ? Styles.page : Styles.pageHidden}>
                     <h1>Settings</h1>

@@ -224,11 +224,11 @@ class Session {
       this.ui.replResponse(command)
       return
     } else if (command.type == "vitals") {
-      // const vitalsData = {
-      //   timestamp : new Date(),
-      //   ...command.payload.value
-      // }
-      this.vitals.push(command.payload.value)
+      const vitalsData = {
+        timestamp : `${new Date()}`,
+        ...command.payload.value
+      }
+      this.vitals.push(vitalsData)
     }
 
     this.commandsManager.addCommand(command)
@@ -259,6 +259,10 @@ class Session {
       // If we don't have a connection OR if we do but its not in the list anymore select the first available one.
       this.selectedConnection = this.connections[0]
     }
+  }
+
+  clearVitalsRecords = () => {
+      this.vitals.clear()
   }
 
   addSubscription = path => {

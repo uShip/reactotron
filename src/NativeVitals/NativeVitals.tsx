@@ -2,12 +2,17 @@ import * as React from "react"
 import { inject, observer } from "mobx-react"
 import NativeVitalsHeader from "./NativeVitalsHeader"
 import Colors from "../Theme/Colors"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
+import { AreaChart, LineChart, Line, Area, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts"
 import { toJS } from "mobx"
 import CustomCommandButton from "../CustomCommands/CustomCommandButton"
+import AppStyles from "../Theme/AppStyles"
 
 const Styles = {
-    container: {},
+    container: {
+        ...AppStyles.Layout.vbox,
+        margin: 0,
+        flex: 1,
+    },
 
     chartContainer: {
         overflowY: "scroll",
@@ -49,54 +54,6 @@ const CHART_MARGINS = {
     bottom: 40,
 }
 
-const demoData = [
-    { name: "Page A", uv: 4000, pv: 2400, amt: 2400 },
-    { name: "Page B", uv: 3000, pv: 1398, amt: 2210 },
-    { name: "Page C", uv: 2000, pv: 9800, amt: 2290 },
-    { name: "Page D", uv: 2780, pv: 3908, amt: 2000 },
-    { name: "Page E", uv: 1890, pv: 4800, amt: 2181 },
-    { name: "Page F", uv: 2390, pv: 3800, amt: 2500 },
-    { name: "Page G", uv: 3490, pv: 4300, amt: 2100 },
-]
-
-interface DemoProps {
-    data: any
-}
-
-interface DemoState { }
-
-@observer
-class DemoChart extends React.Component<DemoProps,DemoState> {
-    render() {
-        console.log(`DemoChart`, demoData)
-        let chartData = []
-
-        var i
-        for (i = 0; i < this.props.data.length; i++) { 
-            if (i < demoData.length) {
-                chartData.push(demoData[i])
-            } else {
-                chartData.push(demoData[0])
-            }
-            console.log("point")
-        }
-
-        return (
-            <ResponsiveContainer width="100%" aspect={3.5 / 3.0}>
-                <LineChart data={chartData} margin={CHART_MARGINS}>
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="pv" stroke="#8884d8" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
-                </LineChart>
-            </ResponsiveContainer>
-        )
-    }
-}
-
 interface ChartProps {
     data: any
 }
@@ -107,23 +64,25 @@ interface ChartState { }
 class VitalsChart extends React.Component<ChartProps, ChartState> {
     render() {
         return (
+            <React.Fragment>
+                {/* ["#aee39a", "#154975", "#87a9fd", "#5941a3", "#8ae1f9", "#115e41", "#38f0ac", "#1fa198"] */}
             <ResponsiveContainer width="100%" aspect={3.5 / 3.0}>
                 <LineChart data={this.props.data} margin={CHART_MARGINS}>
                     <XAxis dataKey="timestamp" />
                     <YAxis />
-                    {/* <CartesianGrid strokeDasharray="3 3" /> */}
                     <Tooltip />
                     <Legend />
-                    <Line type="monotone" dataKey="systemInactive" stroke="#FF0000" />
-                    <Line type="monotone" dataKey="systemPurgable" stroke="#00FF00" />
-                    <Line type="monotone" dataKey="systemActive" stroke="#0000FF" />
-                    <Line type="monotone" dataKey="appUsed" stroke="#AA0000" activeDot={{ r: 8 }} />
-                    <Line type="monotone" dataKey="systemUsed" stroke="#00AA00" />
-                    <Line type="monotone" dataKey="systemFree" stroke="#0000AA" />
-                    <Line type="monotone" dataKey="systemWired" stroke="#550000" />
-                    <Line type="monotone" dataKey="systemTotal" stroke="#005500" />
+                    <Line type="monotone" dataKey="systemInactive" stroke="#aea39a" />
+                    <Line type="monotone" dataKey="systemPurgable" stroke="#154975" />
+                    <Line type="monotone" dataKey="systemActive" stroke="#87a9fd" />
+                    <Line type="monotone" dataKey="appUsed" stroke="#FF0000" />
+                    <Line type="monotone" dataKey="systemUsed" stroke="#8ae1f9" />
+                    <Line type="monotone" dataKey="systemFree" stroke="#00FF00" />
+                    <Line type="monotone" dataKey="systemWired" stroke="#38a0ac" />
+                    <Line type="monotone" dataKey="systemTotal" stroke="#1fa198" />
                 </LineChart>
             </ResponsiveContainer>
+            </React.Fragment>
         )
     }
 }
@@ -139,8 +98,12 @@ interface State { }
 export default class NativeVitalsView extends React.Component<Props, State> {
     state = {}
 
-    executeCommand = () => {
+    pingMemory = () => {
         this.props.session.ui.sendCustomMessageWithArgs("pingMemory")
+    }
+
+    clearVitalsRecords = () => {
+        this.props.session.clearVitalsRecords()
     }
 
     render() {
@@ -149,18 +112,17 @@ export default class NativeVitalsView extends React.Component<Props, State> {
         return (
             <div style={Styles.container as any}>
                 <NativeVitalsHeader />
-                { <VitalsChart data={vitals} />}
+                <div style={{ flexDirection: "row" }}>
+                    <VitalsChart data={vitals} />
+                </div>
                 <div style={{
                     marginLeft: "40px",
                     width: "100%",
                     height: "30px",
-                }}>{`Points: ${vitals.length}`}</div>
-
+                }}>{`Snapshots Recorded: ${vitals.length}`}</div>
                 <div style={Styles.buttonContainer as any}>
-                    <CustomCommandButton item={{
-                        title: "Ping Memory",
-                        command: "pingMemory",
-                    }} onClick={this.executeCommand} />
+                    <div style={Styles.button as any} onClick={this.pingMemory} >Ping Memory</div>
+                    <div style={Styles.button as any} onClick={this.clearVitalsRecords} >Clear</div>
                 </div>
             </div>
         )
